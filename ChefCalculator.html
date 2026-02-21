@@ -28,6 +28,7 @@
             --danger: #e05252;
             --danger-hover: #c43a3a;
             --success: #4ade80;
+            --warning: #facc15;
             --border-color: rgba(255, 255, 255, 0.08);
             --border-accent: rgba(201, 165, 90, 0.25);
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -57,7 +58,6 @@
             overflow-x: hidden;
         }
 
-        /* === Background Effects === */
         body::before {
             content: '';
             position: fixed;
@@ -71,7 +71,6 @@
             z-index: 0;
         }
 
-        /* === Container === */
         .container {
             max-width: 960px;
             margin: 0 auto;
@@ -162,7 +161,37 @@
             border-color: var(--border-accent);
         }
 
-        /* === Saved Dishes Section === */
+        /* === Dashboard === */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .dashboard-item {
+            padding: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .dashboard-item .dash-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .dashboard-item .dash-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        /* === Saved Dishes === */
         .saved-dishes {
             margin-bottom: 2rem;
         }
@@ -174,6 +203,42 @@
             margin-bottom: 1.25rem;
             flex-wrap: wrap;
             gap: 1rem;
+        }
+
+        .saved-dishes-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-icon {
+            height: 38px;
+            min-width: auto;
+            padding: 0 0.75rem;
+            font-size: 0.8rem;
+            background: var(--secondary-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-icon:hover {
+            border-color: var(--border-accent);
+            color: var(--accent-light);
+            background: var(--accent-glow);
+            transform: none;
+        }
+
+        .filter-select {
+            height: 38px;
+            width: auto;
+            min-width: 120px;
+            padding: 0 0.75rem;
+            font-size: 0.8rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
         }
 
         .dishes-list {
@@ -236,18 +301,47 @@
         .saved-dish-content {
             flex: 1;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
+            flex-direction: column;
+            gap: 0.25rem;
             min-width: 0;
         }
 
-        .saved-dish-content span {
+        .saved-dish-name {
             font-weight: 600;
             font-size: 0.95rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        .saved-dish-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-badge {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            background: var(--accent-glow);
+            color: var(--accent-light);
+            border: 1px solid var(--border-accent);
+            white-space: nowrap;
+        }
+
+        .saved-dish-price {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .saved-dish-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            flex-shrink: 0;
         }
 
         .empty-state {
@@ -304,6 +398,46 @@
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
+        /* === Editing Banner === */
+        .editing-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, rgba(201, 165, 90, 0.15) 0%, var(--card-bg) 100%);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-md);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .editing-banner.active {
+            display: flex;
+        }
+
+        .editing-banner-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--accent-light);
+        }
+
+        .editing-banner .btn-cancel {
+            height: 34px;
+            min-width: auto;
+            padding: 0 1rem;
+            font-size: 0.8rem;
+            background: rgba(224, 82, 82, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(224, 82, 82, 0.2);
+        }
+
+        .editing-banner .btn-cancel:hover {
+            background: rgba(224, 82, 82, 0.2);
+            transform: none;
+        }
+
         /* === Form === */
         .form-section {
             margin-bottom: 1.5rem;
@@ -335,7 +469,6 @@
             white-space: nowrap;
         }
 
-        /* === Inputs & Selects === */
         input,
         select {
             height: 44px;
@@ -438,6 +571,7 @@
             border-radius: var(--radius-sm);
             transition: var(--transition);
             animation: slideIn 0.3s ease-out;
+            position: relative;
         }
 
         .ingredient-item:hover {
@@ -445,14 +579,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .ingredient-item input[type="text"] {
@@ -472,6 +600,61 @@
 
         .ingredient-item .remove-btn {
             flex-shrink: 0;
+        }
+
+        .ingredient-item .btn-save-lib {
+            flex-shrink: 0;
+            height: 36px !important;
+            min-width: auto !important;
+            padding: 0 0.5rem !important;
+            font-size: 0.8rem !important;
+            background: var(--accent-glow) !important;
+            color: var(--accent-light) !important;
+            border: 1px solid var(--border-accent) !important;
+        }
+
+        .ingredient-item .btn-save-lib:hover {
+            background: var(--accent-glow-strong) !important;
+            transform: none !important;
+        }
+
+        /* === Autocomplete === */
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            left: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-sm);
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .autocomplete-list.active {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            transition: background 0.15s;
+        }
+
+        .autocomplete-item:hover {
+            background: var(--accent-glow);
+        }
+
+        .autocomplete-item .ac-price {
+            color: var(--accent);
+            font-size: 0.8rem;
+            direction: ltr;
         }
 
         /* === Costs Grid === */
@@ -495,6 +678,76 @@
         }
 
         .costs-container input {
+            text-align: center;
+            direction: ltr;
+        }
+
+        /* === VAT Row === */
+        .vat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.75rem 1.25rem;
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+        }
+
+        .vat-row label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .vat-toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .vat-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .vat-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 26px;
+            transition: var(--transition);
+        }
+
+        .vat-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            right: 2px;
+            bottom: 2px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .vat-toggle input:checked + .vat-slider {
+            background: var(--accent-glow-strong);
+            border-color: var(--accent);
+        }
+
+        .vat-toggle input:checked + .vat-slider::before {
+            transform: translateX(-22px);
+            background: var(--accent);
+        }
+
+        #vatPercent {
+            width: 80px;
             text-align: center;
             direction: ltr;
         }
@@ -634,19 +887,13 @@
         }
 
         @keyframes resultsReveal {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
         }
 
@@ -657,7 +904,6 @@
             border-radius: var(--radius-md);
             text-align: center;
             transition: var(--transition);
-            position: relative;
         }
 
         .result-item:hover {
@@ -676,7 +922,7 @@
         }
 
         .result-item div {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--accent-light);
             direction: ltr;
@@ -691,101 +937,127 @@
             color: var(--accent);
         }
 
+        .food-cost-good { color: var(--success) !important; }
+        .food-cost-ok { color: var(--warning) !important; }
+        .food-cost-high { color: var(--danger) !important; }
+
+        /* === Ingredient Library Modal === */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: resultsReveal 0.3s ease-out;
+        }
+
+        .modal h2 {
+            font-size: 1.3rem;
+            color: var(--accent-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: none !important;
+            border: none !important;
+            color: var(--text-muted) !important;
+            font-size: 1.5rem !important;
+            min-width: auto !important;
+            height: auto !important;
+            padding: 0.25rem !important;
+            cursor: pointer;
+        }
+
+        .library-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .library-item span {
+            flex: 1;
+        }
+
+        .library-item .lib-price {
+            color: var(--accent);
+            font-weight: 600;
+            direction: ltr;
+        }
+
+        .library-item .lib-unit {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* === Import file input === */
+        #importFileInput {
+            display: none;
+        }
+
         /* === Scrollbar === */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--primary-bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--text-muted);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--primary-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
 
         /* === Mobile === */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem 0.75rem 3rem;
-            }
-
-            .header {
-                padding: 2rem 1.25rem;
-            }
-
-            .header h1 {
-                font-size: 1.6rem;
-            }
-
-            .card {
-                padding: 1.25rem;
-            }
-
+            .container { padding: 1rem 0.75rem 3rem; }
+            .header { padding: 2rem 1.25rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.25rem; }
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
             .form-group {
                 flex-direction: column !important;
                 align-items: stretch;
                 gap: 0.5rem;
             }
-
-            .form-group label,
-            .form-group > span {
-                min-width: auto;
-            }
-
-            .costs-container {
-                grid-template-columns: 1fr;
-            }
-
-            .ingredient-item {
-                flex-wrap: wrap;
-            }
-
-            .ingredient-item input[type="text"] {
-                flex-basis: 100%;
-            }
-
-            .buttons-container {
-                flex-direction: column;
-            }
-
-            .buttons-container button {
-                width: 100%;
-                min-width: auto;
-            }
-
-            .results-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .saved-dishes-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-container {
-                max-width: 100%;
-            }
-
-            .image-upload-container {
-                flex-direction: column !important;
-                align-items: center !important;
-            }
+            .form-group label, .form-group > span { min-width: auto; }
+            .costs-container { grid-template-columns: 1fr; }
+            .ingredient-item { flex-wrap: wrap; }
+            .ingredient-item input[type="text"] { flex-basis: 100%; }
+            .buttons-container { flex-direction: column; }
+            .buttons-container button { width: 100%; min-width: auto; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+            .saved-dishes-header { flex-direction: column; align-items: stretch; }
+            .search-container { max-width: 100%; }
+            .image-upload-container { flex-direction: column !important; align-items: center !important; }
+            .vat-row { flex-wrap: wrap; }
+            .editing-banner { flex-direction: column; gap: 0.5rem; text-align: center; }
         }
 
         @media (max-width: 480px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dishes-list {
-                grid-template-columns: 1fr;
-            }
+            .results-grid { grid-template-columns: 1fr; }
+            .dishes-list { grid-template-columns: 1fr; }
+            .saved-dishes-actions { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -807,11 +1079,35 @@
                     <span class="icon">📋</span>
                     מנות שמורות
                 </div>
-                <div class="search-container">
-                    <input type="text" id="searchDishes" placeholder="חפש מנות...">
+                <div class="saved-dishes-actions">
+                    <div class="search-container">
+                        <input type="text" id="searchDishes" placeholder="חפש מנות...">
+                    </div>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">כל הקטגוריות</option>
+                        <option value="מנות ראשונות">מנות ראשונות</option>
+                        <option value="עיקריות">עיקריות</option>
+                        <option value="קינוחים">קינוחים</option>
+                        <option value="משקאות">משקאות</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                    <button class="btn-icon" id="exportBtn" title="ייצוא">📤 ייצוא</button>
+                    <button class="btn-icon" id="importBtn" title="ייבוא">📥 ייבוא</button>
+                    <button class="btn-icon" id="libraryBtn" title="ספריית רכיבים">📚 ספרייה</button>
+                    <input type="file" id="importFileInput" accept=".json">
                 </div>
             </div>
+            <div id="dashboard" class="dashboard" style="display:none;"></div>
             <div id="dishesList" class="dishes-list"></div>
+        </div>
+
+        <!-- Editing Banner -->
+        <div id="editingBanner" class="editing-banner">
+            <div class="editing-banner-text">
+                <span>✏️</span>
+                <span>עריכת מנה: <strong id="editingDishName"></strong></span>
+            </div>
+            <button class="btn-cancel" id="cancelEditBtn">ביטול עריכה</button>
         </div>
 
         <!-- Image Upload -->
@@ -837,6 +1133,16 @@
             <div class="form-group">
                 <label for="dishName">שם המנה:</label>
                 <input type="text" id="dishName" placeholder="לדוגמה: פסטה ברוטב עגבניות" required>
+            </div>
+            <div class="form-group">
+                <label for="dishCategory">קטגוריה:</label>
+                <select id="dishCategory">
+                    <option value="אחר">אחר</option>
+                    <option value="מנות ראשונות">מנות ראשונות</option>
+                    <option value="עיקריות">עיקריות</option>
+                    <option value="קינוחים">קינוחים</option>
+                    <option value="משקאות">משקאות</option>
+                </select>
             </div>
             <div class="form-group">
                 <label for="servings">מספר מנות:</label>
@@ -876,6 +1182,15 @@
                     <input type="number" id="desiredProfit" min="0" max="100" value="30" required>
                 </div>
             </div>
+            <div class="vat-row">
+                <label>מע״מ:</label>
+                <div class="vat-toggle">
+                    <input type="checkbox" id="vatEnabled" checked>
+                    <span class="vat-slider"></span>
+                </div>
+                <input type="number" id="vatPercent" min="0" max="100" value="17" step="0.1">
+                <label>%</label>
+            </div>
         </div>
 
         <!-- Action Buttons -->
@@ -900,6 +1215,10 @@
                     <h3>מחיר מומלץ למנה</h3>
                     <div id="recommendedPrice">₪0</div>
                 </div>
+                <div class="result-item" id="vatPriceItem" style="display:none;">
+                    <h3>מחיר כולל מע״מ</h3>
+                    <div id="priceWithVat">₪0</div>
+                </div>
                 <div class="result-item">
                     <h3>רווח למנה</h3>
                     <div id="profitPerDish">₪0</div>
@@ -908,6 +1227,21 @@
                     <h3>אחוז רווחיות</h3>
                     <div id="profitPercentage">0%</div>
                 </div>
+                <div class="result-item">
+                    <h3>Food Cost</h3>
+                    <div id="foodCostPercent">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingredient Library Modal -->
+    <div id="libraryModal" class="modal-overlay">
+        <div class="modal">
+            <h2>📚 ספריית רכיבים</h2>
+            <div id="libraryList"></div>
+            <div style="text-align:center; margin-top:1.5rem;">
+                <button class="btn-secondary" id="closeLibraryBtn">סגור</button>
             </div>
         </div>
     </div>
@@ -919,11 +1253,17 @@
             const calculateBtn = document.getElementById('calculateBtn');
             const saveDishBtn = document.getElementById('saveDishBtn');
             const searchInput = document.getElementById('searchDishes');
+            const categoryFilter = document.getElementById('categoryFilter');
             const imageInput = document.getElementById('dishImage');
             const imagePreview = document.getElementById('imagePreview');
             const removeImageBtn = document.getElementById('removeImage');
+            const editingBanner = document.getElementById('editingBanner');
+            const editingDishName = document.getElementById('editingDishName');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
 
-            // Image handling
+            let editingIndex = -1; // -1 = new dish, >= 0 = editing existing
+
+            // === Image handling ===
             imageInput.addEventListener('change', function (e) {
                 const file = e.target.files[0];
                 if (file) {
@@ -944,7 +1284,96 @@
                 removeImageBtn.style.display = 'none';
             });
 
-            // Create ingredient fields
+            // === Ingredient Library ===
+            function getLibrary() {
+                return JSON.parse(localStorage.getItem('ingredientLibrary') || '[]');
+            }
+
+            function saveToLibrary(name, price, unit) {
+                if (!name) return;
+                const lib = getLibrary();
+                const existing = lib.findIndex(i => i.name === name);
+                if (existing >= 0) {
+                    lib[existing] = { name, price, unit };
+                } else {
+                    lib.push({ name, price, unit });
+                }
+                localStorage.setItem('ingredientLibrary', JSON.stringify(lib));
+            }
+
+            function removeFromLibrary(index) {
+                const lib = getLibrary();
+                lib.splice(index, 1);
+                localStorage.setItem('ingredientLibrary', JSON.stringify(lib));
+                renderLibraryModal();
+            }
+
+            function renderLibraryModal() {
+                const lib = getLibrary();
+                const list = document.getElementById('libraryList');
+                if (lib.length === 0) {
+                    list.innerHTML = '<div class="empty-state"><span class="icon">📚</span><p>הספרייה ריקה. שמור רכיבים מהטופס באמצעות כפתור 💾</p></div>';
+                    return;
+                }
+                list.innerHTML = lib.map((item, i) => `
+                    <div class="library-item">
+                        <span>${item.name}</span>
+                        <span class="lib-unit">${item.unit || ''}</span>
+                        <span class="lib-price">₪${parseFloat(item.price || 0).toFixed(2)}</span>
+                        <button class="remove-btn" onclick="document.dispatchEvent(new CustomEvent('removeLibItem', {detail:${i}}))">הסר</button>
+                    </div>
+                `).join('');
+            }
+
+            document.addEventListener('removeLibItem', e => removeFromLibrary(e.detail));
+
+            document.getElementById('libraryBtn').addEventListener('click', function () {
+                renderLibraryModal();
+                document.getElementById('libraryModal').classList.add('active');
+            });
+
+            document.getElementById('closeLibraryBtn').addEventListener('click', function () {
+                document.getElementById('libraryModal').classList.remove('active');
+            });
+
+            document.getElementById('libraryModal').addEventListener('click', function (e) {
+                if (e.target === this) this.classList.remove('active');
+            });
+
+            // === Autocomplete for ingredients ===
+            function setupAutocomplete(nameInput, priceInput, unitSelect) {
+                const parent = nameInput.closest('.ingredient-item');
+                let acList = document.createElement('div');
+                acList.className = 'autocomplete-list';
+                parent.appendChild(acList);
+
+                nameInput.addEventListener('input', function () {
+                    const val = this.value.trim().toLowerCase();
+                    if (!val) { acList.classList.remove('active'); return; }
+                    const lib = getLibrary();
+                    const matches = lib.filter(i => i.name.toLowerCase().includes(val));
+                    if (matches.length === 0) { acList.classList.remove('active'); return; }
+                    acList.innerHTML = matches.map(m => `
+                        <div class="autocomplete-item" data-name="${m.name}" data-price="${m.price}" data-unit="${m.unit || 'גרם'}">
+                            <span>${m.name}</span>
+                            <span class="ac-price">₪${parseFloat(m.price || 0).toFixed(2)}</span>
+                        </div>
+                    `).join('');
+                    acList.classList.add('active');
+                    acList.querySelectorAll('.autocomplete-item').forEach(item => {
+                        item.addEventListener('click', function () {
+                            nameInput.value = this.dataset.name;
+                            priceInput.value = this.dataset.price;
+                            if (unitSelect) unitSelect.value = this.dataset.unit;
+                            acList.classList.remove('active');
+                        });
+                    });
+                });
+
+                nameInput.addEventListener('blur', () => setTimeout(() => acList.classList.remove('active'), 200));
+            }
+
+            // === Create ingredient fields ===
             function createIngredientFields() {
                 const div = document.createElement('div');
                 div.className = 'ingredient-item';
@@ -959,26 +1388,46 @@
                         <option value="כוסות">כוסות</option>
                     </select>
                     <input type="number" placeholder="מחיר ₪" min="0" class="ingredient-price" required>
+                    <button type="button" class="btn-save-lib" title="שמור לספרייה">💾</button>
                     <button type="button" class="remove-btn">הסר</button>
                 `;
+
+                const nameInput = div.querySelector('.ingredient-name');
+                const priceInput = div.querySelector('.ingredient-price');
+                const unitSelect = div.querySelector('.ingredient-unit');
+
+                setupAutocomplete(nameInput, priceInput, unitSelect);
+
+                div.querySelector('.btn-save-lib').addEventListener('click', function () {
+                    const name = nameInput.value.trim();
+                    const price = priceInput.value;
+                    const unit = unitSelect.value;
+                    if (!name) { alert('נא להזין שם רכיב'); return; }
+                    saveToLibrary(name, price, unit);
+                    this.textContent = '✓';
+                    setTimeout(() => this.textContent = '💾', 1500);
+                });
+
                 div.querySelector('.remove-btn').addEventListener('click', function () {
                     div.style.animation = 'slideIn 0.2s ease-out reverse';
                     setTimeout(() => div.remove(), 200);
                 });
+
                 return div;
             }
 
-            // Add ingredient
             addIngredientBtn.addEventListener('click', function () {
                 ingredientsList.appendChild(createIngredientFields());
             });
 
-            // Calculate costs
+            // === Calculate costs ===
             function calculateCosts() {
-                const servings = parseFloat(document.getElementById('servings').value) || 0;
+                const servings = parseFloat(document.getElementById('servings').value) || 1;
                 const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
                 const additionalCosts = parseFloat(document.getElementById('additionalCosts').value) || 0;
                 const desiredProfit = parseFloat(document.getElementById('desiredProfit').value) || 0;
+                const vatEnabled = document.getElementById('vatEnabled').checked;
+                const vatPercent = parseFloat(document.getElementById('vatPercent').value) || 0;
 
                 let totalIngredientsCost = 0;
                 document.querySelectorAll('.ingredient-item').forEach(item => {
@@ -992,12 +1441,31 @@
                 const recommendedPrice = totalCostPerDish / (1 - (desiredProfit / 100));
                 const profitPerDish = recommendedPrice - totalCostPerDish;
                 const actualProfitPercentage = (profitPerDish / recommendedPrice) * 100;
+                const foodCostPct = recommendedPrice > 0 ? (ingredientsCostPerDish / recommendedPrice) * 100 : 0;
+                const priceWithVat = vatEnabled ? recommendedPrice * (1 + vatPercent / 100) : recommendedPrice;
 
                 document.getElementById('ingredientsCost').textContent = `₪${totalIngredientsCost.toFixed(2)}`;
                 document.getElementById('totalCostPerDish').textContent = `₪${totalCostPerDish.toFixed(2)}`;
                 document.getElementById('recommendedPrice').textContent = `₪${recommendedPrice.toFixed(2)}`;
                 document.getElementById('profitPerDish').textContent = `₪${profitPerDish.toFixed(2)}`;
                 document.getElementById('profitPercentage').textContent = `${actualProfitPercentage.toFixed(1)}%`;
+
+                // Food Cost with color coding
+                const foodCostEl = document.getElementById('foodCostPercent');
+                foodCostEl.textContent = `${foodCostPct.toFixed(1)}%`;
+                foodCostEl.className = '';
+                if (foodCostPct < 30) foodCostEl.classList.add('food-cost-good');
+                else if (foodCostPct <= 35) foodCostEl.classList.add('food-cost-ok');
+                else foodCostEl.classList.add('food-cost-high');
+
+                // VAT
+                const vatItem = document.getElementById('vatPriceItem');
+                if (vatEnabled) {
+                    vatItem.style.display = '';
+                    document.getElementById('priceWithVat').textContent = `₪${priceWithVat.toFixed(2)}`;
+                } else {
+                    vatItem.style.display = 'none';
+                }
 
                 document.getElementById('results').style.display = 'block';
 
@@ -1006,13 +1474,34 @@
                     totalCostPerDish,
                     recommendedPrice,
                     profitPerDish,
-                    actualProfitPercentage
+                    actualProfitPercentage,
+                    foodCostPct,
+                    priceWithVat
                 };
             }
 
             calculateBtn.addEventListener('click', calculateCosts);
 
-            // Save dish
+            // === Editing mode ===
+            function setEditingMode(index, name) {
+                editingIndex = index;
+                editingDishName.textContent = name;
+                editingBanner.classList.add('active');
+                saveDishBtn.innerHTML = '✏️ עדכן מנה';
+            }
+
+            function clearEditingMode() {
+                editingIndex = -1;
+                editingBanner.classList.remove('active');
+                saveDishBtn.innerHTML = '💾 שמור מנה';
+            }
+
+            cancelEditBtn.addEventListener('click', function () {
+                clearEditingMode();
+                clearForm();
+            });
+
+            // === Save dish ===
             saveDishBtn.addEventListener('click', function () {
                 const dishName = document.getElementById('dishName').value;
                 if (!dishName) {
@@ -1032,6 +1521,7 @@
 
                 const dishData = {
                     name: dishName,
+                    category: document.getElementById('dishCategory').value,
                     servings: document.getElementById('servings').value,
                     ingredients: ingredients,
                     laborCost: document.getElementById('laborCost').value,
@@ -1042,95 +1532,143 @@
                 };
 
                 const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
-                savedDishes.push(dishData);
-                localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
 
+                if (editingIndex >= 0 && editingIndex < savedDishes.length) {
+                    savedDishes[editingIndex] = dishData;
+                } else {
+                    savedDishes.push(dishData);
+                }
+
+                localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
+                clearEditingMode();
                 loadSavedDishes();
                 clearForm();
             });
 
-            // Load saved dishes
+            // === Dashboard ===
+            function updateDashboard() {
+                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                const dashEl = document.getElementById('dashboard');
+
+                if (savedDishes.length === 0) {
+                    dashEl.style.display = 'none';
+                    return;
+                }
+
+                dashEl.style.display = 'grid';
+
+                const totalDishes = savedDishes.length;
+                let totalFoodCost = 0;
+                let totalRecommended = 0;
+                let mostProfitable = { name: '-', profit: 0 };
+
+                savedDishes.forEach(d => {
+                    const calc = d.calculations || {};
+                    const fc = calc.foodCostPct || 0;
+                    const rp = calc.recommendedPrice || 0;
+                    const pp = calc.profitPerDish || 0;
+                    totalFoodCost += fc;
+                    totalRecommended += rp;
+                    if (pp > mostProfitable.profit) {
+                        mostProfitable = { name: d.name, profit: pp };
+                    }
+                });
+
+                const avgFoodCost = totalFoodCost / totalDishes;
+                const avgPrice = totalRecommended / totalDishes;
+
+                dashEl.innerHTML = `
+                    <div class="dashboard-item">
+                        <div class="dash-label">סה״כ מנות</div>
+                        <div class="dash-value">${totalDishes}</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="dash-label">Food Cost ממוצע</div>
+                        <div class="dash-value">${avgFoodCost.toFixed(1)}%</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="dash-label">מחיר ממוצע</div>
+                        <div class="dash-value">₪${avgPrice.toFixed(0)}</div>
+                    </div>
+                    <div class="dashboard-item">
+                        <div class="dash-label">הכי רווחית</div>
+                        <div class="dash-value" style="font-size:0.85rem;">${mostProfitable.name}</div>
+                    </div>
+                `;
+            }
+
+            // === Load saved dishes ===
             function loadSavedDishes() {
                 const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
                 const dishesList = document.getElementById('dishesList');
+                const searchTerm = searchInput.value.toLowerCase();
+                const categoryFilterVal = categoryFilter.value;
                 dishesList.innerHTML = '';
 
-                if (savedDishes.length === 0) {
+                let filtered = savedDishes;
+                if (searchTerm) {
+                    filtered = filtered.filter(d => d.name.toLowerCase().includes(searchTerm));
+                }
+                if (categoryFilterVal) {
+                    filtered = filtered.filter(d => d.category === categoryFilterVal);
+                }
+
+                if (filtered.length === 0) {
+                    const msg = savedDishes.length === 0
+                        ? 'אין מנות שמורות עדיין. הוסף מנה חדשה!'
+                        : 'לא נמצאו מנות תואמות';
+                    const icon = savedDishes.length === 0 ? '🍳' : '🔍';
                     dishesList.innerHTML = `
                         <div class="empty-state" style="grid-column: 1 / -1;">
-                            <span class="icon">🍳</span>
-                            <p>אין מנות שמורות עדיין. הוסף מנה חדשה!</p>
+                            <span class="icon">${icon}</span>
+                            <p>${msg}</p>
                         </div>
                     `;
+                    updateDashboard();
                     return;
                 }
 
-                savedDishes.forEach((dish, index) => {
+                filtered.forEach((dish) => {
+                    const realIndex = savedDishes.indexOf(dish);
                     const dishElement = document.createElement('div');
                     dishElement.className = 'saved-dish';
+                    const calc = dish.calculations || {};
+                    const priceStr = calc.recommendedPrice ? `₪${parseFloat(calc.recommendedPrice).toFixed(0)}` : '';
                     dishElement.innerHTML = `
                         <img src="${dish.image || ''}" alt="${dish.name}">
                         <div class="saved-dish-content">
-                            <span>${dish.name}</span>
-                            <button class="remove-btn" data-index="${index}">הסר</button>
+                            <span class="saved-dish-name">${dish.name}</span>
+                            <div class="saved-dish-meta">
+                                ${dish.category ? `<span class="category-badge">${dish.category}</span>` : ''}
+                                ${priceStr ? `<span class="saved-dish-price">${priceStr}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="saved-dish-actions">
+                            <button class="remove-btn" data-index="${realIndex}">הסר</button>
                         </div>
                     `;
-                    dishElement.addEventListener('click', () => loadDish(dish));
+                    dishElement.addEventListener('click', (e) => {
+                        if (e.target.closest('.remove-btn')) return;
+                        loadDish(dish, realIndex);
+                    });
                     dishElement.querySelector('.remove-btn').addEventListener('click', function (e) {
                         e.stopPropagation();
-                        removeDish(index);
+                        removeDish(realIndex);
                     });
                     dishesList.appendChild(dishElement);
                 });
+
+                updateDashboard();
             }
 
-            // Search dishes
-            searchInput.addEventListener('input', function (e) {
-                const searchTerm = e.target.value.toLowerCase();
-                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
-                const filteredDishes = savedDishes.filter(dish =>
-                    dish.name.toLowerCase().includes(searchTerm)
-                );
+            // Search & filter
+            searchInput.addEventListener('input', loadSavedDishes);
+            categoryFilter.addEventListener('change', loadSavedDishes);
 
-                const dishesList = document.getElementById('dishesList');
-                dishesList.innerHTML = '';
-
-                if (filteredDishes.length === 0) {
-                    dishesList.innerHTML = `
-                        <div class="empty-state" style="grid-column: 1 / -1;">
-                            <span class="icon">🔍</span>
-                            <p>לא נמצאו מנות תואמות</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                filteredDishes.forEach((dish, index) => {
-                    const dishElement = document.createElement('div');
-                    dishElement.className = 'saved-dish';
-                    let dishContent = '';
-                    if (dish.image) {
-                        dishContent += `<img src="${dish.image}" alt="${dish.name}">`;
-                    }
-                    dishContent += `
-                        <div class="saved-dish-content">
-                            <span>${dish.name}</span>
-                            <button class="remove-btn" data-index="${index}">הסר</button>
-                        </div>
-                    `;
-                    dishElement.innerHTML = dishContent;
-                    dishElement.addEventListener('click', () => loadDish(dish));
-                    dishElement.querySelector('.remove-btn').addEventListener('click', function (e) {
-                        e.stopPropagation();
-                        removeDish(index);
-                    });
-                    dishesList.appendChild(dishElement);
-                });
-            });
-
-            // Load dish
-            function loadDish(dish) {
+            // === Load dish into form (editing mode) ===
+            function loadDish(dish, index) {
                 document.getElementById('dishName').value = dish.name;
+                document.getElementById('dishCategory').value = dish.category || 'אחר';
                 document.getElementById('servings').value = dish.servings;
                 document.getElementById('laborCost').value = dish.laborCost;
                 document.getElementById('additionalCosts').value = dish.additionalCosts;
@@ -1156,25 +1694,88 @@
                     ingredientsList.appendChild(div);
                 });
 
+                setEditingMode(index, dish.name);
                 calculateCosts();
-
-                // Scroll to form
                 document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
-            // Remove dish
+            // === Remove dish ===
             function removeDish(index) {
                 if (confirm('האם אתה בטוח שברצונך למחוק מנה זו?')) {
                     const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
                     savedDishes.splice(index, 1);
                     localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
+                    if (editingIndex === index) {
+                        clearEditingMode();
+                        clearForm();
+                    } else if (editingIndex > index) {
+                        editingIndex--;
+                    }
                     loadSavedDishes();
                 }
             }
 
-            // Clear form
+            // === Export ===
+            document.getElementById('exportBtn').addEventListener('click', function () {
+                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                const library = getLibrary();
+                const data = { dishes: savedDishes, library: library, exportDate: new Date().toISOString() };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `chef-calculator-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // === Import ===
+            document.getElementById('importBtn').addEventListener('click', function () {
+                document.getElementById('importFileInput').click();
+            });
+
+            document.getElementById('importFileInput').addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        const existingDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                        const existingLib = getLibrary();
+
+                        const dishes = data.dishes || data;
+                        const library = data.library || [];
+
+                        if (!Array.isArray(dishes)) {
+                            alert('קובץ לא תקין');
+                            return;
+                        }
+
+                        const mergedDishes = existingDishes.concat(dishes);
+                        localStorage.setItem('savedDishes', JSON.stringify(mergedDishes));
+
+                        if (library.length > 0) {
+                            const mergedLib = existingLib.concat(library.filter(
+                                newItem => !existingLib.some(ex => ex.name === newItem.name)
+                            ));
+                            localStorage.setItem('ingredientLibrary', JSON.stringify(mergedLib));
+                        }
+
+                        loadSavedDishes();
+                        alert(`יובאו ${dishes.length} מנות בהצלחה!`);
+                    } catch (err) {
+                        alert('שגיאה בקריאת הקובץ');
+                    }
+                };
+                reader.readAsText(file);
+                this.value = '';
+            });
+
+            // === Clear form ===
             function clearForm() {
                 document.getElementById('dishName').value = '';
+                document.getElementById('dishCategory').value = 'אחר';
                 document.getElementById('servings').value = '1';
                 document.getElementById('laborCost').value = '0';
                 document.getElementById('additionalCosts').value = '0';
@@ -1188,7 +1789,7 @@
                 addIngredientBtn.click();
             }
 
-            // Init
+            // === Init ===
             addIngredientBtn.click();
             loadSavedDishes();
         });
