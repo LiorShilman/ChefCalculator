@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון שף - ניהול ותמחור מנות</title>
+    <style>
+        :root {
+            /* צבעים */
+            --primary-bg: #121212;
+            --secondary-bg: #1e1e1e;
+            --card-bg: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --success-color: #22c55e;
+            --border-color: #333333;
+
+            /* מרווחים */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        /* איפוס וסגנונות בסיס */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            direction: rtl;
+        }
+
+        /* מכל ראשי */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        /* כותרות */
+        h1,
+        h2,
+        h3 {
+            margin-bottom: var(--spacing-lg);
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+        }
+
+        /* מנות שמורות */
+        .saved-dishes {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* עיצוב לכרטיס מנה שמורה */
+        .saved-dish {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: linear-gradient(45deg, black, transparent);
+            border-radius: 8px;
+        }
+
+        /* תמונה בכרטיס */
+        .saved-dish img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+            /* מונע מהתמונה להתכווץ */
+        }
+
+        /* מכל התוכן */
+        .saved-dish-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* כפתורים */
+        .saved-dish button {
+            min-width: auto;
+            padding: 8px 16px;
+            margin-left: 8px;
+        }
+
+        /* כשאין תמונה */
+        .saved-dish img:not([src]),
+        .saved-dish img[src=""] {
+            display: none;
+        }
+
+        /* תצוגת תמונה רק כשיש מקור תקין */
+        .saved-dish img[src]:not([src=""]) {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .saved-dishes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .dishes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        /* חיפוש */
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .search-container input {
+            width: 100%;
+            height: 42px;
+            padding: 0 var(--spacing-lg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        /* טופס ראשי */
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--card-bg);
+            border-radius: 8px;
+            min-height: 60px;
+            flex-direction: row !important;
+        }
+
+        /* אינפוטים וסלקטים */
+        input,
+        select {
+            height: 42px;
+            padding: 0 var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        /* תוויות */
+        .form-group label,
+        .form-group>span {
+            min-width: 140px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        /* העלאת תמונה */
+        .image-upload-container {
+            align-items: center;
+        }
+
+        .image-upload-container img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-right: var(--spacing-md);
+            //background: var(--secondary-bg);
+        }
+
+        .image-upload-container input[type="file"] {
+            //max-width: 300px;
+        }
+
+        /* רכיבים */
+        .ingredients-container {
+            display: flex;
+            flex-direction: row !important;
+            gap: var(--spacing-md);
+        }
+
+        .ingredients-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .ingredient-row {
+            display: flex;
+            flex-direction: row !important;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            padding: 8px;
+        }
+
+        .ingredient-row>* {
+            margin: 0 !important;
+        }
+
+        .ingredient-row input[type="text"] {
+            flex: 2;
+            min-width: 0;
+        }
+
+        .ingredient-row input[type="number"] {
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .ingredient-row select {
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .ingredient-row button {
+            width: auto;
+            flex-shrink: 0;
+            margin: 10px 0px;
+        }
+
+
+        /* עלויות */
+        .costs-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .costs-container .form-group {
+            margin: 0;
+        }
+
+        .costs-container input {
+            text-align: center;
+            direction: ltr;
+        }
+
+        /* כפתורים */
+        button {
+            height: 42px;
+            padding: 0 var(--spacing-lg);
+            border: none;
+            border-radius: 6px;
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 120px;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        button.remove-btn {
+            background: var(--danger-color);
+            min-width: auto;
+            margin: 10px 0px;
+        }
+
+        button.remove-btn:hover {
+            background: var(--danger-hover);
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin: var(--spacing-xl) 0;
+        }
+
+        .buttons-container button {
+            min-width: 180px;
+        }
+
+        /* תוצאות */
+        .results {
+            background: var(--secondary-bg);
+            border-radius: 12px;
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .result-item {
+            padding: var(--spacing-md);
+            background: var(--card-bg);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-item h3 {
+            font-size: 0.9rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* אנימציות */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* התאמה למובייל */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+
+            .form-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-group label,
+            .form-group>span {
+                min-width: auto;
+                margin-bottom: var(--spacing-xs);
+            }
+
+            .costs-container {
+                grid-template-columns: 1fr;
+            }
+
+            .ingredient-row {
+                grid-template-columns: 1fr 1fr;
+                gap: var(--spacing-sm);
+                flex-direction: row !important;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .buttons-container button {
+                width: 100%;
+            }
+
+            .image-upload-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .image-upload-container img {
+                margin: var(--spacing-md) 0;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>מחשבון שף - ניהול ותמחור מנות</h1>
+
+        <div class="saved-dishes">
+            <div class="saved-dishes-header">
+                <h2>מנות שמורות</h2>
+                <div class="search-container">
+                    <input type="text" id="searchDishes" placeholder="חפש מנות...">
+                </div>
+            </div>
+            <div id="dishesList" class="dishes-list"></div>
+        </div>
+
+        <!-- תוספת של אזור העלאת תמונה -->
+        <div class="form-group image-upload-container">
+            <label for="dishImage">תמונת המנה:</label>
+            <input type="file" id="dishImage" accept="image/*">
+            <img id="imagePreview" class="image-preview" alt="תצוגה מקדימה של תמונת המנה">
+            <button id="removeImage" class="remove-image" style="display: none;">הסר תמונה</button>
+        </div>
+
+        <div class="form-group">
+            <label for="dishName">שם המנה:</label>
+            <input type="text" id="dishName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="servings">מספר מנות:</label>
+            <input type="number" id="servings" min="1" value="1" required>
+        </div>
+
+        <div class="form-group ingredients-container">
+            <label>רכיבים:</label>
+            <div id="ingredientsList" class="ingredients-list"></div>
+            <button id="addIngredient">הוסף רכיב</button>
+        </div>
+
+        <div class="costs-container">
+            <div class="form-group">
+                <label for="laborCost">עלות עבודה (₪):</label>
+                <input type="number" id="laborCost" min="0" step="0.1" value="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalCosts">עלויות נוספות (₪):</label>
+                <input type="number" id="additionalCosts" min="0" step="0.1" value="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="desiredProfit">אחוז רווח רצוי (%):</label>
+                <input type="number" id="desiredProfit" min="0" max="100" value="30" required>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button id="calculateBtn">חשב עלויות ורווחיות</button>
+            <button id="saveDishBtn">שמור מנה</button>
+        </div>
+
+        <div id="results" class="results" style="display: none;">
+            <h2>תוצאות החישוב</h2>
+            <div class="results-grid">
+                <div class="result-item">
+                    <h3>עלות חומרי גלם</h3>
+                    <div id="ingredientsCost">₪0</div>
+                </div>
+                <div class="result-item">
+                    <h3>סה״כ עלות למנה</h3>
+                    <div id="totalCostPerDish">₪0</div>
+                </div>
+                <div class="result-item">
+                    <h3>מחיר מומלץ למנה</h3>
+                    <div id="recommendedPrice">₪0</div>
+                </div>
+                <div class="result-item">
+                    <h3>רווח למנה</h3>
+                    <div id="profitPerDish">₪0</div>
+                </div>
+                <div class="result-item">
+                    <h3>אחוז רווחיות</h3>
+                    <div id="profitPercentage">0%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- הוסף את הקוד הבא לפני תג הסגירה של body -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // אתחול משתנים גלובליים
+            const ingredientsList = document.getElementById('ingredientsList');
+            const addIngredientBtn = document.getElementById('addIngredient');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const saveDishBtn = document.getElementById('saveDishBtn');
+            const searchInput = document.getElementById('searchDishes');
+            const imageInput = document.getElementById('dishImage');
+            const imagePreview = document.getElementById('imagePreview');
+            const removeImageBtn = document.getElementById('removeImage');
+
+            // ניהול תמונות
+            imageInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        imagePreview.src = event.target.result;
+                        imagePreview.classList.add('active');
+                        removeImageBtn.style.display = 'inline-block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            removeImageBtn.addEventListener('click', function() {
+                imagePreview.src = '';
+                imagePreview.classList.remove('active');
+                imageInput.value = '';
+                removeImageBtn.style.display = 'none';
+            });
+
+            // פונקציה ליצירת שדות רכיב חדש
+            function createIngredientFields() {
+                const div = document.createElement('div');
+                div.className = 'ingredient-item';
+
+                div.innerHTML = `
+                <input type="text" placeholder="שם הרכיב" class="ingredient-name">
+                <input type="number" placeholder="כמות" class="ingredient-amount" min="0" step="0.1" >
+                <select class="ingredient-unit">
+                    <option value="גרם">גרם</option>
+					<option value="יחידות">יחידות</option>
+					<option value="כפיות">כפיות</option>
+					<option value="כפות">כפות</option>
+					<option value="כוסות">כוסות</option>
+                </select>
+                <input type="number" placeholder="מחיר" min="0" class="ingredient-price" required>
+                <button type="button" class="remove-btn">הסר</button>
+            `;
+
+                div.querySelector('.remove-btn').addEventListener('click', function() {
+                    div.remove();
+                });
+
+                return div;
+            }
+
+            // הוספת רכיב חדש
+            addIngredientBtn.addEventListener('click', function() {
+                ingredientsList.appendChild(createIngredientFields());
+
+            });
+
+            // פונקציית חישוב
+            function calculateCosts() {
+                const servings = parseFloat(document.getElementById('servings').value) || 0;
+                const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
+                const additionalCosts = parseFloat(document.getElementById('additionalCosts').value) || 0;
+                const desiredProfit = parseFloat(document.getElementById('desiredProfit').value) || 0;
+
+                let totalIngredientsCost = 0;
+                const ingredients = document.querySelectorAll('.ingredient-item');
+
+                ingredients.forEach(item => {
+                    const amount = parseFloat(item.querySelector('.ingredient-amount').value) || 0;
+                    const price = parseFloat(item.querySelector('.ingredient-price').value) || 0;
+                    totalIngredientsCost += amount * price;
+                });
+
+                const ingredientsCostPerDish = totalIngredientsCost / servings;
+                const totalCostPerDish = ingredientsCostPerDish + (laborCost / servings) + (additionalCosts / servings);
+                const recommendedPrice = totalCostPerDish / (1 - (desiredProfit / 100));
+                const profitPerDish = recommendedPrice - totalCostPerDish;
+                const actualProfitPercentage = (profitPerDish / recommendedPrice) * 100;
+
+                // עדכון התצוגה
+                document.getElementById('ingredientsCost').textContent = `₪${totalIngredientsCost.toFixed(2)}`;
+                document.getElementById('totalCostPerDish').textContent = `₪${totalCostPerDish.toFixed(2)}`;
+                document.getElementById('recommendedPrice').textContent = `₪${recommendedPrice.toFixed(2)}`;
+                document.getElementById('profitPerDish').textContent = `₪${profitPerDish.toFixed(2)}`;
+                document.getElementById('profitPercentage').textContent = `${actualProfitPercentage.toFixed(1)}%`;
+
+                document.getElementById('results').style.display = 'block';
+
+                return {
+                    totalIngredientsCost,
+                    totalCostPerDish,
+                    recommendedPrice,
+                    profitPerDish,
+                    actualProfitPercentage
+                };
+            }
+
+            // חישוב עלויות
+            calculateBtn.addEventListener('click', calculateCosts);
+
+            // שמירת מנה
+            saveDishBtn.addEventListener('click', function() {
+                const dishName = document.getElementById('dishName').value;
+                if (!dishName) {
+                    alert('נא להזין שם מנה');
+                    return;
+                }
+
+                const ingredients = [];
+                document.querySelectorAll('.ingredient-item').forEach(item => {
+                    ingredients.push({
+                        name: item.querySelector('.ingredient-name').value,
+                        amount: item.querySelector('.ingredient-amount').value,
+                        unit: item.querySelector('.ingredient-unit').value,
+                        price: item.querySelector('.ingredient-price').value
+                    });
+                });
+
+                const dishData = {
+                    name: dishName,
+                    servings: document.getElementById('servings').value,
+                    ingredients: ingredients,
+                    laborCost: document.getElementById('laborCost').value,
+                    additionalCosts: document.getElementById('additionalCosts').value,
+                    desiredProfit: document.getElementById('desiredProfit').value,
+                    image: imagePreview.src || null,
+                    calculations: calculateCosts()
+                };
+
+                // שמירה ב-localStorage
+                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                savedDishes.push(dishData);
+                localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
+
+                //alert('המנה נשמרה בהצלחה!');
+                loadSavedDishes();
+                clearForm();
+            });
+
+            // טעינת מנות שמורות
+            function loadSavedDishes() {
+                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                const dishesList = document.getElementById('dishesList');
+                dishesList.innerHTML = '';
+                savedDishes.forEach((dish, index) => {
+                    const dishElement = document.createElement('div');
+                    dishElement.className = 'saved-dish';
+                    let dishContent = `
+                        <img src="${dish.image || ''}" alt="${dish.name}">
+                        <div class="saved-dish-content">
+                            <span>${dish.name}</span>
+                            <button class="remove-btn" data-index="${index}">הסר</button>
+                        </div>
+                    `;
+                    dishElement.innerHTML = dishContent;
+                    dishElement.addEventListener('click', () => loadDish(dish));
+
+                    // הוספת מאזין לכפתור ההסרה
+                    dishElement.querySelector('.remove-btn').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        removeDish(index);
+                    });
+
+                    dishesList.appendChild(dishElement);
+
+                });
+            }
+
+            // חיפוש מנות
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                const filteredDishes = savedDishes.filter(dish =>
+                    dish.name.toLowerCase().includes(searchTerm)
+                );
+
+                const dishesList = document.getElementById('dishesList');
+                dishesList.innerHTML = '';
+
+                filteredDishes.forEach((dish, index) => {
+                    const dishElement = document.createElement('div');
+                    dishElement.className = 'saved-dish';
+
+                    let dishContent = '';
+                    if (dish.image) {
+                        dishContent += `<img src="${dish.image}" class="saved-dish-image" alt="${dish.name}">`;
+                    }
+                    dishContent += `
+                    <span>${dish.name}</span>
+                    <button class="remove-btn" data-index="${index}">הסר</button>
+                `;
+
+                    dishElement.innerHTML = dishContent;
+                    dishElement.addEventListener('click', () => loadDish(dish));
+
+                    dishElement.querySelector('.remove-btn').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        removeDish(index);
+                    });
+
+                    dishesList.appendChild(dishElement);
+                });
+            });
+
+            // טעינת מנה
+            function loadDish(dish) {
+                document.getElementById('dishName').value = dish.name;
+                document.getElementById('servings').value = dish.servings;
+                document.getElementById('laborCost').value = dish.laborCost;
+                document.getElementById('additionalCosts').value = dish.additionalCosts;
+                document.getElementById('desiredProfit').value = dish.desiredProfit;
+
+                // טעינת תמונה
+                if (dish.image) {
+                    imagePreview.src = dish.image;
+                    imagePreview.classList.add('active');
+                    removeImageBtn.style.display = 'inline-block';
+                } else {
+                    imagePreview.src = '';
+                    imagePreview.classList.remove('active');
+                    removeImageBtn.style.display = 'none';
+                }
+
+                // טעינת רכיבים
+                ingredientsList.innerHTML = '';
+                dish.ingredients.forEach(ingredient => {
+                    const div = createIngredientFields();
+                    div.querySelector('.ingredient-name').value = ingredient.name;
+                    div.querySelector('.ingredient-amount').value = ingredient.amount;
+                    div.querySelector('.ingredient-unit').value = ingredient.unit;
+                    div.querySelector('.ingredient-price').value = ingredient.price;
+                    ingredientsList.appendChild(div);
+                });
+
+                // חישוב מחדש
+                calculateCosts();
+            }
+
+            // הסרת מנה
+            function removeDish(index) {
+                if (confirm('האם אתה בטוח שברצונך למחוק מנה זו?')) {
+                    const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
+                    savedDishes.splice(index, 1);
+                    localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
+                    loadSavedDishes();
+                }
+            }
+
+            function handleImageUpload(event) {
+                const container = document.querySelector('.image-upload-container');
+                const img = container.querySelector('img');
+                const file = event.target.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        container.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            function removeImage() {
+                const container = document.querySelector('.image-upload-container');
+                const img = container.querySelector('img');
+                const input = container.querySelector('input[type="file"]');
+
+                img.src = '';
+                input.value = '';
+                container.classList.remove('has-image');
+            }
+
+
+            // ניקוי טופס
+            function clearForm() {
+                document.getElementById('dishName').value = '';
+                document.getElementById('servings').value = '';
+                document.getElementById('laborCost').value = '';
+                document.getElementById('additionalCosts').value = '';
+                document.getElementById('desiredProfit').value = '';
+                ingredientsList.innerHTML = '';
+                document.getElementById('results').style.display = 'none';
+                imagePreview.src = '';
+                imagePreview.classList.remove('active');
+                imageInput.value = '';
+                removeImageBtn.style.display = 'none';
+            }
+
+            // הוספת רכיב ראשון בטעינת הדף
+            addIngredientBtn.click();
+
+            // טעינת מנות שמורות בטעינת הדף
+            loadSavedDishes();
+
+
+        });
+
+    </script>
+
+
+</body>
+
+</html>
