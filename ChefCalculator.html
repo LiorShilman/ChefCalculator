@@ -5,30 +5,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>מחשבון שף - ניהול ותמחור מנות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            /* צבעים */
-            --primary-bg: #121212;
-            --secondary-bg: #1e1e1e;
-            --card-bg: #252525;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent-color: #6366f1;
-            --accent-hover: #4f46e5;
-            --danger-color: #ef4444;
-            --danger-hover: #dc2626;
-            --success-color: #22c55e;
-            --border-color: #333333;
-
-            /* מרווחים */
-            --spacing-xs: 0.5rem;
-            --spacing-sm: 0.75rem;
-            --spacing-md: 1rem;
-            --spacing-lg: 1.5rem;
-            --spacing-xl: 2rem;
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #12121a;
+            --card-bg: #1a1a2e;
+            --card-bg-hover: #1f1f35;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --text-primary: #f0f0f5;
+            --text-secondary: #8888a4;
+            --text-muted: #55556a;
+            --accent: #c9a55a;
+            --accent-light: #e2c882;
+            --accent-dark: #a07e3a;
+            --accent-glow: rgba(201, 165, 90, 0.15);
+            --accent-glow-strong: rgba(201, 165, 90, 0.3);
+            --danger: #e05252;
+            --danger-hover: #c43a3a;
+            --success: #4ade80;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-accent: rgba(201, 165, 90, 0.25);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --shadow-accent: 0 4px 20px rgba(201, 165, 90, 0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* איפוס וסגנונות בסיס */
         * {
             margin: 0;
             padding: 0;
@@ -38,248 +50,448 @@
         body {
             background-color: var(--primary-bg);
             color: var(--text-primary);
-            font-family: system-ui, -apple-system, sans-serif;
-            line-height: 1.6;
+            font-family: 'Heebo', system-ui, -apple-system, sans-serif;
+            line-height: 1.7;
             direction: rtl;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* מכל ראשי */
+        /* === Background Effects === */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 70% 20%, rgba(201, 165, 90, 0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 80%, rgba(100, 80, 160, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === Container === */
         .container {
-            max-width: 1200px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: var(--spacing-xl);
+            padding: 2rem 1.5rem 4rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* כותרות */
-        h1,
-        h2,
-        h3 {
-            margin-bottom: var(--spacing-lg);
-            font-weight: 600;
-        }
-
-        h1 {
-            font-size: 2rem;
+        /* === Header === */
+        .header {
             text-align: center;
-            color: var(--accent-color);
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: 3rem;
+            padding: 2.5rem 2rem;
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(201, 165, 90, 0.08) 100%);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-accent);
+            position: relative;
+            overflow: hidden;
         }
 
-        h2 {
-            font-size: 1.5rem;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(201, 165, 90, 0.3));
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* === Section Titles === */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
             color: var(--text-primary);
+            margin-bottom: 1.25rem;
         }
 
-        h3 {
-            font-size: 1.1rem;
-            color: var(--accent-color);
+        .section-title .icon {
+            font-size: 1.3rem;
         }
 
-        /* מנות שמורות */
-        .saved-dishes {
-            background: var(--secondary-bg);
-            border-radius: 12px;
-            padding: var(--spacing-lg);
-            margin-bottom: var(--spacing-xl);
-        }
-
-        /* עיצוב לכרטיס מנה שמורה */
-        .saved-dish {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: linear-gradient(45deg, black, transparent);
-            border-radius: 8px;
-        }
-
-        /* תמונה בכרטיס */
-        .saved-dish img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            border-radius: 8px;
-            flex-shrink: 0;
-            /* מונע מהתמונה להתכווץ */
-        }
-
-        /* מכל התוכן */
-        .saved-dish-content {
+        .section-title::after {
+            content: '';
             flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-accent), transparent);
         }
 
-        /* כפתורים */
-        .saved-dish button {
-            min-width: auto;
-            padding: 8px 16px;
-            margin-left: 8px;
+        /* === Cards === */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
         }
 
-        /* כשאין תמונה */
-        .saved-dish img:not([src]),
-        .saved-dish img[src=""] {
-            display: none;
+        .card:hover {
+            border-color: var(--border-accent);
         }
 
-        /* תצוגת תמונה רק כשיש מקור תקין */
-        .saved-dish img[src]:not([src=""]) {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            border-radius: 8px;
+        /* === Saved Dishes Section === */
+        .saved-dishes {
+            margin-bottom: 2rem;
         }
 
         .saved-dishes-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .dishes-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--spacing-md);
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
         }
 
-        /* חיפוש */
+        .saved-dish {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(201, 165, 90, 0.05) 0%, var(--card-bg) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .saved-dish::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .saved-dish:hover {
+            border-color: var(--border-accent);
+            background: linear-gradient(135deg, rgba(201, 165, 90, 0.1) 0%, var(--card-bg-hover) 100%);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-accent);
+        }
+
+        .saved-dish:hover::before {
+            opacity: 1;
+        }
+
+        .saved-dish img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            flex-shrink: 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .saved-dish img:not([src]),
+        .saved-dish img[src=""] {
+            display: none;
+        }
+
+        .saved-dish-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+
+        .saved-dish-content span {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 0.95rem;
+        }
+
+        /* === Search === */
         .search-container {
             position: relative;
             width: 100%;
-            max-width: 300px;
+            max-width: 280px;
+        }
+
+        .search-container::before {
+            content: '🔍';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.85rem;
+            z-index: 1;
+            opacity: 0.5;
         }
 
         .search-container input {
             width: 100%;
-            height: 42px;
-            padding: 0 var(--spacing-lg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: var(--card-bg);
+            height: 44px;
+            padding: 0 1rem 0 2.5rem;
+            padding-right: 2.5rem;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--secondary-bg);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: var(--transition);
         }
 
-        /* טופס ראשי */
+        .search-container input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        /* === Form === */
+        .form-section {
+            margin-bottom: 1.5rem;
+        }
+
         .form-group {
             display: flex;
             align-items: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            padding: var(--spacing-md);
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem 1.25rem;
             background: var(--card-bg);
-            border-radius: 8px;
-            min-height: 60px;
-            flex-direction: row !important;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            transition: var(--transition);
         }
 
-        /* אינפוטים וסלקטים */
+        .form-group:focus-within {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .form-group label,
+        .form-group > span {
+            min-width: 130px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* === Inputs & Selects === */
         input,
         select {
-            height: 42px;
-            padding: 0 var(--spacing-md);
+            height: 44px;
+            padding: 0 1rem;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             background: var(--secondary-bg);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.95rem;
+            font-family: inherit;
             width: 100%;
+            transition: var(--transition);
         }
 
         input:focus,
         select:focus {
             outline: none;
-            border-color: var(--accent-color);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        /* תוויות */
-        .form-group label,
-        .form-group>span {
-            min-width: 140px;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            white-space: nowrap;
+        input::placeholder {
+            color: var(--text-muted);
         }
 
-        /* העלאת תמונה */
+        /* === Image Upload === */
         .image-upload-container {
-            align-items: center;
+            flex-wrap: wrap;
         }
 
         .image-upload-container img {
-            width: 120px;
-            height: 120px;
-            object-fit: contain;
-            border-radius: 8px;
-            margin-right: var(--spacing-md);
-            //background: var(--secondary-bg);
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--border-color);
+            transition: var(--transition);
         }
 
-        .image-upload-container input[type="file"] {
-            //max-width: 300px;
+        .image-upload-container img.active {
+            border-style: solid;
+            border-color: var(--accent);
         }
 
-        /* רכיבים */
+        .image-upload-container img:not([src]),
+        .image-upload-container img[src=""] {
+            opacity: 0.3;
+        }
+
+        input[type="file"] {
+            height: auto;
+            padding: 0.5rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            height: 36px;
+            padding: 0 1rem;
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-sm);
+            background: var(--accent-glow);
+            color: var(--accent-light);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-left: 0.75rem;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--accent-glow-strong);
+        }
+
+        /* === Ingredients === */
         .ingredients-container {
-            display: flex;
-            flex-direction: row !important;
-            gap: var(--spacing-md);
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .ingredients-container > label {
+            margin-bottom: 0.5rem;
         }
 
         .ingredients-list {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-sm);
-        }
-
-        .ingredient-row {
-            display: flex;
-            flex-direction: row !important;
-            align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
             width: 100%;
-            padding: 8px;
         }
 
-        .ingredient-row>* {
-            margin: 0 !important;
+        .ingredient-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+            animation: slideIn 0.3s ease-out;
         }
 
-        .ingredient-row input[type="text"] {
+        .ingredient-item:hover {
+            border-color: var(--border-accent);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .ingredient-item input[type="text"] {
             flex: 2;
             min-width: 0;
         }
 
-        .ingredient-row input[type="number"] {
+        .ingredient-item input[type="number"] {
             flex: 1;
-            min-width: 80px;
+            min-width: 70px;
         }
 
-        .ingredient-row select {
-            width: 100px;
+        .ingredient-item select {
+            width: 90px;
             flex-shrink: 0;
         }
 
-        .ingredient-row button {
-            width: auto;
+        .ingredient-item .remove-btn {
             flex-shrink: 0;
-            margin: 10px 0px;
         }
 
-
-        /* עלויות */
+        /* === Costs Grid === */
         .costs-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-md);
-            margin: var(--spacing-lg) 0;
+            gap: 1rem;
+            margin: 1.5rem 0;
         }
 
         .costs-container .form-group {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 0.5rem;
             margin: 0;
+        }
+
+        .costs-container .form-group label {
+            min-width: auto;
+            font-size: 0.85rem;
         }
 
         .costs-container input {
@@ -287,110 +499,255 @@
             direction: ltr;
         }
 
-        /* כפתורים */
+        /* === Buttons === */
         button {
-            height: 42px;
-            padding: 0 var(--spacing-lg);
+            height: 44px;
+            padding: 0 1.5rem;
             border: none;
-            border-radius: 6px;
-            background: var(--accent-color);
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 500;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
             cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 120px;
+            transition: var(--transition);
+            min-width: 100px;
+            position: relative;
+            overflow: hidden;
         }
 
-        button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: #1a1a2e;
+            box-shadow: var(--shadow-accent);
         }
 
-        button.remove-btn {
-            background: var(--danger-color);
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(201, 165, 90, 0.3);
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--accent-light);
+            border: 1px solid var(--border-accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-add {
+            background: var(--accent-glow);
+            color: var(--accent-light);
+            border: 1px dashed var(--border-accent);
+            width: 100%;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-add:hover {
+            background: var(--accent-glow-strong);
+            border-style: solid;
+        }
+
+        .remove-btn {
+            background: rgba(224, 82, 82, 0.1) !important;
+            color: var(--danger) !important;
+            border: 1px solid rgba(224, 82, 82, 0.2) !important;
+            min-width: auto !important;
+            height: 36px !important;
+            padding: 0 0.75rem !important;
+            font-size: 0.85rem !important;
+        }
+
+        .remove-btn:hover {
+            background: rgba(224, 82, 82, 0.2) !important;
+            border-color: var(--danger) !important;
+            transform: none !important;
+        }
+
+        .remove-image {
+            background: rgba(224, 82, 82, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(224, 82, 82, 0.2);
+            height: 36px;
+            padding: 0 1rem;
+            font-size: 0.85rem;
             min-width: auto;
-            margin: 10px 0px;
         }
 
-        button.remove-btn:hover {
-            background: var(--danger-hover);
+        .remove-image:hover {
+            background: rgba(224, 82, 82, 0.2);
         }
 
         .buttons-container {
             display: flex;
-            gap: var(--spacing-md);
+            gap: 1rem;
             justify-content: center;
-            margin: var(--spacing-xl) 0;
+            margin: 2rem 0;
         }
 
         .buttons-container button {
-            min-width: 180px;
+            min-width: 200px;
+            height: 50px;
+            font-size: 1rem;
         }
 
-        /* תוצאות */
+        /* === Results === */
         .results {
-            background: var(--secondary-bg);
-            border-radius: 12px;
-            padding: var(--spacing-xl);
-            margin-top: var(--spacing-xl);
-            animation: fadeIn 0.3s ease-in-out;
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(201, 165, 90, 0.06) 100%);
+            border: 1px solid var(--border-accent);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-top: 2rem;
+            animation: resultsReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .results h2 {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        @keyframes resultsReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--spacing-lg);
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
         }
 
         .result-item {
-            padding: var(--spacing-md);
-            background: var(--card-bg);
-            border-radius: 8px;
+            padding: 1.25rem 1rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
             text-align: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .result-item:hover {
+            border-color: var(--border-accent);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-accent);
         }
 
         .result-item h3 {
-            font-size: 0.9rem;
-            margin-bottom: var(--spacing-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* אנימציות */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
+        .result-item div {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-light);
+            direction: ltr;
         }
 
-        /* התאמה למובייל */
+        .result-item.highlight {
+            background: linear-gradient(135deg, rgba(201, 165, 90, 0.1) 0%, var(--secondary-bg) 100%);
+            border-color: var(--border-accent);
+        }
+
+        .result-item.highlight div {
+            color: var(--accent);
+        }
+
+        /* === Scrollbar === */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* === Mobile === */
         @media (max-width: 768px) {
             .container {
-                padding: var(--spacing-md);
+                padding: 1rem 0.75rem 3rem;
+            }
+
+            .header {
+                padding: 2rem 1.25rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .card {
+                padding: 1.25rem;
             }
 
             .form-group {
-                flex-direction: column;
+                flex-direction: column !important;
                 align-items: stretch;
+                gap: 0.5rem;
             }
 
             .form-group label,
-            .form-group>span {
+            .form-group > span {
                 min-width: auto;
-                margin-bottom: var(--spacing-xs);
             }
 
             .costs-container {
                 grid-template-columns: 1fr;
             }
 
-            .ingredient-row {
-                grid-template-columns: 1fr 1fr;
-                gap: var(--spacing-sm);
-                flex-direction: row !important;
+            .ingredient-item {
+                flex-wrap: wrap;
+            }
+
+            .ingredient-item input[type="text"] {
+                flex-basis: 100%;
             }
 
             .buttons-container {
@@ -399,32 +756,57 @@
 
             .buttons-container button {
                 width: 100%;
-            }
-
-            .image-upload-container {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .image-upload-container img {
-                margin: var(--spacing-md) 0;
+                min-width: auto;
             }
 
             .results-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .saved-dishes-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .image-upload-container {
+                flex-direction: column !important;
+                align-items: center !important;
             }
         }
 
+        @media (max-width: 480px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dishes-list {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>מחשבון שף - ניהול ותמחור מנות</h1>
 
-        <div class="saved-dishes">
+        <!-- Header -->
+        <div class="header">
+            <span class="header-icon">👨‍🍳</span>
+            <h1>מחשבון שף</h1>
+            <p>ניהול ותמחור מנות מקצועי</p>
+        </div>
+
+        <!-- Saved Dishes -->
+        <div class="card saved-dishes">
             <div class="saved-dishes-header">
-                <h2>מנות שמורות</h2>
+                <div class="section-title" style="margin-bottom:0">
+                    <span class="icon">📋</span>
+                    מנות שמורות
+                </div>
                 <div class="search-container">
                     <input type="text" id="searchDishes" placeholder="חפש מנות...">
                 </div>
@@ -432,54 +814,79 @@
             <div id="dishesList" class="dishes-list"></div>
         </div>
 
-        <!-- תוספת של אזור העלאת תמונה -->
-        <div class="form-group image-upload-container">
-            <label for="dishImage">תמונת המנה:</label>
-            <input type="file" id="dishImage" accept="image/*">
-            <img id="imagePreview" class="image-preview" alt="תצוגה מקדימה של תמונת המנה">
-            <button id="removeImage" class="remove-image" style="display: none;">הסר תמונה</button>
-        </div>
-
-        <div class="form-group">
-            <label for="dishName">שם המנה:</label>
-            <input type="text" id="dishName" required>
-        </div>
-
-        <div class="form-group">
-            <label for="servings">מספר מנות:</label>
-            <input type="number" id="servings" min="1" value="1" required>
-        </div>
-
-        <div class="form-group ingredients-container">
-            <label>רכיבים:</label>
-            <div id="ingredientsList" class="ingredients-list"></div>
-            <button id="addIngredient">הוסף רכיב</button>
-        </div>
-
-        <div class="costs-container">
-            <div class="form-group">
-                <label for="laborCost">עלות עבודה (₪):</label>
-                <input type="number" id="laborCost" min="0" step="0.1" value="0" required>
+        <!-- Image Upload -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="icon">📸</span>
+                תמונת המנה
             </div>
-
-            <div class="form-group">
-                <label for="additionalCosts">עלויות נוספות (₪):</label>
-                <input type="number" id="additionalCosts" min="0" step="0.1" value="0" required>
-            </div>
-
-            <div class="form-group">
-                <label for="desiredProfit">אחוז רווח רצוי (%):</label>
-                <input type="number" id="desiredProfit" min="0" max="100" value="30" required>
+            <div class="form-group image-upload-container">
+                <label for="dishImage">העלאת תמונה:</label>
+                <input type="file" id="dishImage" accept="image/*">
+                <img id="imagePreview" class="image-preview" alt="תצוגה מקדימה">
+                <button id="removeImage" class="remove-image" style="display: none;">הסר תמונה</button>
             </div>
         </div>
 
+        <!-- Dish Details -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="icon">🍽️</span>
+                פרטי המנה
+            </div>
+            <div class="form-group">
+                <label for="dishName">שם המנה:</label>
+                <input type="text" id="dishName" placeholder="לדוגמה: פסטה ברוטב עגבניות" required>
+            </div>
+            <div class="form-group">
+                <label for="servings">מספר מנות:</label>
+                <input type="number" id="servings" min="1" value="1" required>
+            </div>
+        </div>
+
+        <!-- Ingredients -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="icon">🥘</span>
+                רכיבים
+            </div>
+            <div class="form-group ingredients-container">
+                <div id="ingredientsList" class="ingredients-list"></div>
+                <button id="addIngredient" class="btn-add">+ הוסף רכיב</button>
+            </div>
+        </div>
+
+        <!-- Costs -->
+        <div class="form-section">
+            <div class="section-title">
+                <span class="icon">💰</span>
+                עלויות ורווחיות
+            </div>
+            <div class="costs-container">
+                <div class="form-group">
+                    <label for="laborCost">עלות עבודה (₪)</label>
+                    <input type="number" id="laborCost" min="0" step="0.1" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="additionalCosts">עלויות נוספות (₪)</label>
+                    <input type="number" id="additionalCosts" min="0" step="0.1" value="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="desiredProfit">אחוז רווח רצוי (%)</label>
+                    <input type="number" id="desiredProfit" min="0" max="100" value="30" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
         <div class="buttons-container">
-            <button id="calculateBtn">חשב עלויות ורווחיות</button>
-            <button id="saveDishBtn">שמור מנה</button>
+            <button id="calculateBtn" class="btn-primary">📊 חשב עלויות ורווחיות</button>
+            <button id="saveDishBtn" class="btn-secondary">💾 שמור מנה</button>
         </div>
 
+        <!-- Results -->
         <div id="results" class="results" style="display: none;">
-            <h2>תוצאות החישוב</h2>
+            <h2>📊 תוצאות החישוב</h2>
             <div class="results-grid">
                 <div class="result-item">
                     <h3>עלות חומרי גלם</h3>
@@ -489,7 +896,7 @@
                     <h3>סה״כ עלות למנה</h3>
                     <div id="totalCostPerDish">₪0</div>
                 </div>
-                <div class="result-item">
+                <div class="result-item highlight">
                     <h3>מחיר מומלץ למנה</h3>
                     <div id="recommendedPrice">₪0</div>
                 </div>
@@ -505,10 +912,8 @@
         </div>
     </div>
 
-    <!-- הוסף את הקוד הבא לפני תג הסגירה של body -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // אתחול משתנים גלובליים
+        document.addEventListener('DOMContentLoaded', function () {
             const ingredientsList = document.getElementById('ingredientsList');
             const addIngredientBtn = document.getElementById('addIngredient');
             const calculateBtn = document.getElementById('calculateBtn');
@@ -518,12 +923,12 @@
             const imagePreview = document.getElementById('imagePreview');
             const removeImageBtn = document.getElementById('removeImage');
 
-            // ניהול תמונות
-            imageInput.addEventListener('change', function(e) {
+            // Image handling
+            imageInput.addEventListener('change', function (e) {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(event) {
+                    reader.onload = function (event) {
                         imagePreview.src = event.target.result;
                         imagePreview.classList.add('active');
                         removeImageBtn.style.display = 'inline-block';
@@ -532,46 +937,43 @@
                 }
             });
 
-            removeImageBtn.addEventListener('click', function() {
+            removeImageBtn.addEventListener('click', function () {
                 imagePreview.src = '';
                 imagePreview.classList.remove('active');
                 imageInput.value = '';
                 removeImageBtn.style.display = 'none';
             });
 
-            // פונקציה ליצירת שדות רכיב חדש
+            // Create ingredient fields
             function createIngredientFields() {
                 const div = document.createElement('div');
                 div.className = 'ingredient-item';
-
                 div.innerHTML = `
-                <input type="text" placeholder="שם הרכיב" class="ingredient-name">
-                <input type="number" placeholder="כמות" class="ingredient-amount" min="0" step="0.1" >
-                <select class="ingredient-unit">
-                    <option value="גרם">גרם</option>
-					<option value="יחידות">יחידות</option>
-					<option value="כפיות">כפיות</option>
-					<option value="כפות">כפות</option>
-					<option value="כוסות">כוסות</option>
-                </select>
-                <input type="number" placeholder="מחיר" min="0" class="ingredient-price" required>
-                <button type="button" class="remove-btn">הסר</button>
-            `;
-
-                div.querySelector('.remove-btn').addEventListener('click', function() {
-                    div.remove();
+                    <input type="text" placeholder="שם הרכיב" class="ingredient-name">
+                    <input type="number" placeholder="כמות" class="ingredient-amount" min="0" step="0.1">
+                    <select class="ingredient-unit">
+                        <option value="גרם">גרם</option>
+                        <option value="יחידות">יחידות</option>
+                        <option value="כפיות">כפיות</option>
+                        <option value="כפות">כפות</option>
+                        <option value="כוסות">כוסות</option>
+                    </select>
+                    <input type="number" placeholder="מחיר ₪" min="0" class="ingredient-price" required>
+                    <button type="button" class="remove-btn">הסר</button>
+                `;
+                div.querySelector('.remove-btn').addEventListener('click', function () {
+                    div.style.animation = 'slideIn 0.2s ease-out reverse';
+                    setTimeout(() => div.remove(), 200);
                 });
-
                 return div;
             }
 
-            // הוספת רכיב חדש
-            addIngredientBtn.addEventListener('click', function() {
+            // Add ingredient
+            addIngredientBtn.addEventListener('click', function () {
                 ingredientsList.appendChild(createIngredientFields());
-
             });
 
-            // פונקציית חישוב
+            // Calculate costs
             function calculateCosts() {
                 const servings = parseFloat(document.getElementById('servings').value) || 0;
                 const laborCost = parseFloat(document.getElementById('laborCost').value) || 0;
@@ -579,9 +981,7 @@
                 const desiredProfit = parseFloat(document.getElementById('desiredProfit').value) || 0;
 
                 let totalIngredientsCost = 0;
-                const ingredients = document.querySelectorAll('.ingredient-item');
-
-                ingredients.forEach(item => {
+                document.querySelectorAll('.ingredient-item').forEach(item => {
                     const amount = parseFloat(item.querySelector('.ingredient-amount').value) || 0;
                     const price = parseFloat(item.querySelector('.ingredient-price').value) || 0;
                     totalIngredientsCost += amount * price;
@@ -593,7 +993,6 @@
                 const profitPerDish = recommendedPrice - totalCostPerDish;
                 const actualProfitPercentage = (profitPerDish / recommendedPrice) * 100;
 
-                // עדכון התצוגה
                 document.getElementById('ingredientsCost').textContent = `₪${totalIngredientsCost.toFixed(2)}`;
                 document.getElementById('totalCostPerDish').textContent = `₪${totalCostPerDish.toFixed(2)}`;
                 document.getElementById('recommendedPrice').textContent = `₪${recommendedPrice.toFixed(2)}`;
@@ -611,11 +1010,10 @@
                 };
             }
 
-            // חישוב עלויות
             calculateBtn.addEventListener('click', calculateCosts);
 
-            // שמירת מנה
-            saveDishBtn.addEventListener('click', function() {
+            // Save dish
+            saveDishBtn.addEventListener('click', function () {
                 const dishName = document.getElementById('dishName').value;
                 if (!dishName) {
                     alert('נא להזין שם מנה');
@@ -643,47 +1041,51 @@
                     calculations: calculateCosts()
                 };
 
-                // שמירה ב-localStorage
                 const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
                 savedDishes.push(dishData);
                 localStorage.setItem('savedDishes', JSON.stringify(savedDishes));
 
-                //alert('המנה נשמרה בהצלחה!');
                 loadSavedDishes();
                 clearForm();
             });
 
-            // טעינת מנות שמורות
+            // Load saved dishes
             function loadSavedDishes() {
                 const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
                 const dishesList = document.getElementById('dishesList');
                 dishesList.innerHTML = '';
+
+                if (savedDishes.length === 0) {
+                    dishesList.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <span class="icon">🍳</span>
+                            <p>אין מנות שמורות עדיין. הוסף מנה חדשה!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 savedDishes.forEach((dish, index) => {
                     const dishElement = document.createElement('div');
                     dishElement.className = 'saved-dish';
-                    let dishContent = `
+                    dishElement.innerHTML = `
                         <img src="${dish.image || ''}" alt="${dish.name}">
                         <div class="saved-dish-content">
                             <span>${dish.name}</span>
                             <button class="remove-btn" data-index="${index}">הסר</button>
                         </div>
                     `;
-                    dishElement.innerHTML = dishContent;
                     dishElement.addEventListener('click', () => loadDish(dish));
-
-                    // הוספת מאזין לכפתור ההסרה
-                    dishElement.querySelector('.remove-btn').addEventListener('click', function(e) {
+                    dishElement.querySelector('.remove-btn').addEventListener('click', function (e) {
                         e.stopPropagation();
                         removeDish(index);
                     });
-
                     dishesList.appendChild(dishElement);
-
                 });
             }
 
-            // חיפוש מנות
-            searchInput.addEventListener('input', function(e) {
+            // Search dishes
+            searchInput.addEventListener('input', function (e) {
                 const searchTerm = e.target.value.toLowerCase();
                 const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
                 const filteredDishes = savedDishes.filter(dish =>
@@ -693,32 +1095,40 @@
                 const dishesList = document.getElementById('dishesList');
                 dishesList.innerHTML = '';
 
+                if (filteredDishes.length === 0) {
+                    dishesList.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <span class="icon">🔍</span>
+                            <p>לא נמצאו מנות תואמות</p>
+                        </div>
+                    `;
+                    return;
+                }
+
                 filteredDishes.forEach((dish, index) => {
                     const dishElement = document.createElement('div');
                     dishElement.className = 'saved-dish';
-
                     let dishContent = '';
                     if (dish.image) {
-                        dishContent += `<img src="${dish.image}" class="saved-dish-image" alt="${dish.name}">`;
+                        dishContent += `<img src="${dish.image}" alt="${dish.name}">`;
                     }
                     dishContent += `
-                    <span>${dish.name}</span>
-                    <button class="remove-btn" data-index="${index}">הסר</button>
-                `;
-
+                        <div class="saved-dish-content">
+                            <span>${dish.name}</span>
+                            <button class="remove-btn" data-index="${index}">הסר</button>
+                        </div>
+                    `;
                     dishElement.innerHTML = dishContent;
                     dishElement.addEventListener('click', () => loadDish(dish));
-
-                    dishElement.querySelector('.remove-btn').addEventListener('click', function(e) {
+                    dishElement.querySelector('.remove-btn').addEventListener('click', function (e) {
                         e.stopPropagation();
                         removeDish(index);
                     });
-
                     dishesList.appendChild(dishElement);
                 });
             });
 
-            // טעינת מנה
+            // Load dish
             function loadDish(dish) {
                 document.getElementById('dishName').value = dish.name;
                 document.getElementById('servings').value = dish.servings;
@@ -726,7 +1136,6 @@
                 document.getElementById('additionalCosts').value = dish.additionalCosts;
                 document.getElementById('desiredProfit').value = dish.desiredProfit;
 
-                // טעינת תמונה
                 if (dish.image) {
                     imagePreview.src = dish.image;
                     imagePreview.classList.add('active');
@@ -737,7 +1146,6 @@
                     removeImageBtn.style.display = 'none';
                 }
 
-                // טעינת רכיבים
                 ingredientsList.innerHTML = '';
                 dish.ingredients.forEach(ingredient => {
                     const div = createIngredientFields();
@@ -748,11 +1156,13 @@
                     ingredientsList.appendChild(div);
                 });
 
-                // חישוב מחדש
                 calculateCosts();
+
+                // Scroll to form
+                document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
 
-            // הסרת מנה
+            // Remove dish
             function removeDish(index) {
                 if (confirm('האם אתה בטוח שברצונך למחוק מנה זו?')) {
                     const savedDishes = JSON.parse(localStorage.getItem('savedDishes') || '[]');
@@ -762,59 +1172,27 @@
                 }
             }
 
-            function handleImageUpload(event) {
-                const container = document.querySelector('.image-upload-container');
-                const img = container.querySelector('img');
-                const file = event.target.files[0];
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        img.src = e.target.result;
-                        container.classList.add('has-image');
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-
-            function removeImage() {
-                const container = document.querySelector('.image-upload-container');
-                const img = container.querySelector('img');
-                const input = container.querySelector('input[type="file"]');
-
-                img.src = '';
-                input.value = '';
-                container.classList.remove('has-image');
-            }
-
-
-            // ניקוי טופס
+            // Clear form
             function clearForm() {
                 document.getElementById('dishName').value = '';
-                document.getElementById('servings').value = '';
-                document.getElementById('laborCost').value = '';
-                document.getElementById('additionalCosts').value = '';
-                document.getElementById('desiredProfit').value = '';
+                document.getElementById('servings').value = '1';
+                document.getElementById('laborCost').value = '0';
+                document.getElementById('additionalCosts').value = '0';
+                document.getElementById('desiredProfit').value = '30';
                 ingredientsList.innerHTML = '';
                 document.getElementById('results').style.display = 'none';
                 imagePreview.src = '';
                 imagePreview.classList.remove('active');
                 imageInput.value = '';
                 removeImageBtn.style.display = 'none';
+                addIngredientBtn.click();
             }
 
-            // הוספת רכיב ראשון בטעינת הדף
+            // Init
             addIngredientBtn.click();
-
-            // טעינת מנות שמורות בטעינת הדף
             loadSavedDishes();
-
-
         });
-
     </script>
-
-
 </body>
 
 </html>
